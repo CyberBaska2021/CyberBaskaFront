@@ -5,10 +5,14 @@ import { StyleSheet, Text, View, Image} from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={{fontSize:30, color:'#D75413'}}>{'CyberBaska'}{'\n'}{'\n'} {'O INÍCIO!!!!!'}</Text>
+      <Text style={{fontSize:30, color:'#D75413'}}>{'CyberBaska'}</Text>
       <Image 
        style={styles.tinyLogo}
        source={require('./images/bola.png')}/>
+       <Text style={{fontSize:30, color:'#D75413'}}>{'Cadastrar Jogadores'}</Text>
+       <Text style={{fontSize:30, color:'#D75413'}}>{'Cadastrar Jogo'}</Text>
+       <Text style={{fontSize:30, color:'#D75413'}}>{'Visualizar Jogadores'}</Text>
+
       <StatusBar style="auto" />
     </View>
   );
