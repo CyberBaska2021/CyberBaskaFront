@@ -29,13 +29,12 @@ const Home = ({navigation}) => {
       <Image 
        style={styles.tinyLogo}
        source={require('./images/bola.png')}/>
-       <Text style={{fontSize:30, color:'#D75413'}}>{'Cadastrar Jogadores'}</Text>
+       
        
        <Button
-  title="Cadastrar Jogador" onPress={() => navigation.navigate("Cadastrar Jogador")}
+  title="Novo Jogo" onPress={() => navigation.navigate("Escolher Times")}
 />
-       <Text style={{fontSize:30, color:'#D75413'}}>{'Cadastrar Jogo'}</Text>
-       <Text style={{fontSize:30, color:'#D75413'}}>{'Visualizar Jogadores'}</Text>
+       
 
       <StatusBar style="auto" />
     </View>

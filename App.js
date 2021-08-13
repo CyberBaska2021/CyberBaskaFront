@@ -5,7 +5,7 @@ import { SafeAreaView,StyleSheet, Text, View, Image} from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Home from "./Views/Home/Home";
 import { StatusBar } from 'expo-status-bar';
-import CadastrarJogador from "./Views/CadastrarJogador/CadastrarJogador";
+import EscolherTimes from "./Views/EscolherTimes/choose_teams";
 
 
 
@@ -28,9 +28,9 @@ const Stack = createStackNavigator();
 function App({ navigation }) {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator >
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Cadastrar Jogador" component={CadastrarJogador} />
+        <Stack.Screen name="Escolher Times" component={EscolherTimes} />
       </Stack.Navigator>
     </NavigationContainer>
   );
