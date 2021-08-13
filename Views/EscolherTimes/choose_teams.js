@@ -1,9 +1,14 @@
 import React, { Component,useState  }  from "react";
-
+import {
+  useFonts,
+  RopaSans_400Regular,
+  RopaSans_400Regular_Italic,
+} from '@expo-google-fonts/ropa-sans'
 import { StatusBar } from 'expo-status-bar';
-
+import AppLoading from 'expo-app-loading';
 import { SafeAreaView,StyleSheet, Text, View, Image} from 'react-native';
 import { ThemeProvider, Button, Input, Card,Icon, ListItem, Avatar  } from 'react-native-elements';
+import * as Font from 'expo-font';
 
 
 
@@ -13,9 +18,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     alignItems: 'center',
-    justifyContent: 'center',
+    
   },
-
+  
 
 
   card_team_a:{
@@ -37,8 +42,26 @@ top:'40%',
 
 padding:20
 
+},
+
+card_start:{
+
+  display: "flex",
+      flexDirection: "column", 
+      backgroundColor: "orange",
+      position: 'absolute',
+top:'80%',
+
+padding:20
+
 }
 })
+
+let customFonts = { 
+  
+  'Sans': require('C:\Users\rfs\Downloads\CyberBaska\CyberBaskaFront\assets\fonts\RopaSans-Regular.ttf')
+  }
+
 
 const teams = [
   {
@@ -64,14 +87,37 @@ class EscolherTimes extends Component {
       ativos: ['AG', 'CCB', 'CCI', 'CDA/WA', 'CDCA', 'CPR', 'CRA', 'CRI', 'DEB', 'LF', 'NP'],
       TEAM_A: 'Aguardando Escolha do Time... ',
       TEAM_B: 'Aguardando Escolha do Time... ',
-
-      isChooseTeam: false,
+      fontsLoaded: false,
+      isChooseTeamA: false,
+      isChooseTeamB: false,
       isNotChooseTeamA:true,
       isNotChooseTeamB:true,
+      isNotStartGameButton:true
+  }
+
+  async _loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    this.setState({ fontsLoaded: true });
+  }
+
+  componentDidMount() {
+    this._loadFontsAsync();
   }
   
-  escolherTime = () => {
-    this.setState({isChooseTeam:true})
+  escolherTimeA = () => {
+    this.setState({isChooseTeamA:true})
+  }
+
+  escolherTimeB = () => {
+    this.setState({isChooseTeamB:true})
+  }
+
+  TimeAEscolhido = (time) => {
+    this.setState({isChooseTeamA:false,isNotChooseTeamB:false,TEAM_A:time })
+  }
+
+  TimeBEscolhido = (time) => {
+    this.setState({isChooseTeamB:false,isNotStartGameButton:false,TEAM_B:time })
   }
 
   obterLista = () => {
@@ -109,16 +155,42 @@ class EscolherTimes extends Component {
       })
   }
 
+  tela=()=>{
+
+
+    
+  }
   
   render() {
+
+    if (this.state.fontsLoaded) {
     
 
-    if (this.state.isChooseTeam){
+    if (this.state.isChooseTeamA){
 
       return (<View >
         {
           teams.map((l, i) => (
-            <ListItem key={i} bottomDivider>
+            
+            <ListItem button key={i} bottomDivider onPress={() => this.TimeAEscolhido(l.name)}>
+              <Avatar source={{uri: l.avatar_url}} />
+              <ListItem.Content>
+                <ListItem.Title>{l.name}</ListItem.Title>
+                <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          ))
+        }
+      </View>)
+    }
+
+    if (this.state.isChooseTeamB){
+
+      return (<View >
+        {
+          teams.map((l, i) => (
+            
+            <ListItem button key={i} bottomDivider onPress={() => this.TimeBEscolhido(l.name)}>
               <Avatar source={{uri: l.avatar_url}} />
               <ListItem.Content>
                 <ListItem.Title>{l.name}</ListItem.Title>
@@ -132,17 +204,10 @@ class EscolherTimes extends Component {
 
     return (
 
-
-
-
-
-      
         <View style={styles.container}>
     
-    
-    
     <Card containerStyle= {styles.card_team_a}>
-  <Card.Title>Local</Card.Title>
+  <Card.Title style={{fontFamily: 'RopaSans_400Regular'}}>Local</Card.Title>
   <Card.Divider/>
   
     <Text style={{marginBottom: 10}}>
@@ -152,7 +217,7 @@ class EscolherTimes extends Component {
      
       buttonStyle={{width:250,borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'black'}}
       title='ESCOLHER TIME LOCAL'
-      onPress={this.escolherTime} />
+      onPress={this.escolherTimeA} />
   
 </Card>
 
@@ -166,16 +231,33 @@ class EscolherTimes extends Component {
     <Button
      disabled={this.state.isNotChooseTeamB}
       buttonStyle={{width:250,borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:"black"}}
-      title='ESCOLHER TIME VISITANTE' />
+      title='ESCOLHER TIME VISITANTE'
+      onPress={this.escolherTimeB} />
+  
+</Card>
+
+<Card containerStyle= {styles.card_start}>
+    <Button
+     disabled={this.state.isNotStartGameButton}
+      buttonStyle={{width:250,borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:"black"}}
+      title='INICIAR JOGO'
+       />
   
 </Card>
 
 
+
+
     </View>
+    
      
     );
 
-  }
+  }else {
+    return <AppLoading />
+
+  }}
+
 }
 
 
