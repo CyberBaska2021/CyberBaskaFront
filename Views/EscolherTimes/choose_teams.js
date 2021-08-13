@@ -59,7 +59,7 @@ padding:20
 
 let customFonts = { 
   
-  'Sans': require('C:\Users\rfs\Downloads\CyberBaska\CyberBaskaFront\assets\fonts\RopaSans-Regular.ttf')
+  'Sans': require('C:/Users/rfs/Downloads/CyberBaska/CyberBaskaFront/assets/fonts/RopaSans-Regular.ttf')
   }
 
 
@@ -207,10 +207,10 @@ class EscolherTimes extends Component {
         <View style={styles.container}>
     
     <Card containerStyle= {styles.card_team_a}>
-  <Card.Title style={{fontFamily: 'RopaSans_400Regular'}}>Local</Card.Title>
+  <Card.Title style={{fontSize: 25,fontFamily: 'Sans'}}>Local</Card.Title>
   <Card.Divider/>
   
-    <Text style={{marginBottom: 10}}>
+    <Text style={{marginBottom:20,fontSize: 20, fontFamily: 'Sans'}}>
       {this.state.TEAM_A}
     </Text>
     <Button
@@ -222,10 +222,10 @@ class EscolherTimes extends Component {
 </Card>
 
 <Card containerStyle= {styles.card_team_b}>
-  <Card.Title>Visitante</Card.Title>
+  <Card.Title style={{fontSize: 25, fontFamily: 'Sans'}}>Visitante</Card.Title>
   <Card.Divider/>
   
-    <Text style={{marginBottom: 10}}>
+    <Text style={{marginBottom:20,fontSize: 20, fontFamily: 'Sans'}}>
       {this.state.TEAM_B}
     </Text>
     <Button
