@@ -6,10 +6,10 @@ import {
 } from '@expo-google-fonts/ropa-sans'
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
-import { SafeAreaView,StyleSheet, Text, View, Image} from 'react-native';
+import { SafeAreaView,StyleSheet, Text, View, Image,Dimensions} from 'react-native';
 import { ThemeProvider, Button, Input, Card,Icon, ListItem, Avatar  } from 'react-native-elements';
 import * as Font from 'expo-font';
-
+import axios from 'axios';
 
 
 const styles = StyleSheet.create({
@@ -20,8 +20,71 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     
   },
-  
 
+  game_view: {
+    display:'flex',
+    flexDirection:'row',
+    
+   
+    backgroundColor: 'white',
+    flexWrap:'wrap',
+    height:Dimensions.get('window').height
+
+    
+    
+    
+  }, game_view2: {
+    display:'flex',
+    flexDirection:'row',
+    position:'relative',
+   top:'80%',
+    backgroundColor: 'white',
+    flexWrap:'wrap'
+
+    
+    
+    
+  },
+
+  game_view_a: {
+   
+    
+    marginLeft:20,
+    
+    height:60,
+    width:60,
+    alignItems:'center',
+    
+
+    marginTop:10,
+    justifyContent: "space-around",
+    borderRadius: 30,
+    
+     backgroundColor:"red"
+    
+    
+  },
+  game_view_b: {
+   position:'relative',
+   zIndex:-1,
+top:'50%',
+
+    marginLeft:20,
+    
+    height:60,
+    width:60,
+    alignItems:'center',
+    
+
+    marginTop:10,
+    justifyContent: "space-around",
+    borderRadius: 30,
+    
+     backgroundColor:"blue"
+    
+    
+  }
+,
 
   card_team_a:{
     display: "flex",
@@ -29,8 +92,8 @@ const styles = StyleSheet.create({
         backgroundColor: "orange",
         position: 'absolute',
 top:'10%',
+width:300
 
-padding:20
 },
 card_team_b:{
 
@@ -40,7 +103,6 @@ card_team_b:{
       position: 'absolute',
 top:'40%',
 
-padding:20
 
 },
 
@@ -52,7 +114,7 @@ card_start:{
       position: 'absolute',
 top:'80%',
 
-padding:20
+
 
 }
 })
@@ -63,19 +125,7 @@ let customFonts = {
   }
 
 
-const teams = [
-  {
-    name: 'JV Rockets',
-    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    
-  },
-  {
-    name: 'Cougars',
-    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-  
-  }
-  
-]
+
 
 
 
@@ -84,15 +134,19 @@ class EscolherTimes extends Component {
   
     
     state = {
-      ativos: ['AG', 'CCB', 'CCI', 'CDA/WA', 'CDCA', 'CPR', 'CRA', 'CRI', 'DEB', 'LF', 'NP'],
+      TEAMS: [],
       TEAM_A: 'Aguardando Escolha do Time... ',
       TEAM_B: 'Aguardando Escolha do Time... ',
+      TEAM_A_PLAYERS:[],
+      TEAM_B_PLAYERS:[],
       fontsLoaded: false,
       isChooseTeamA: false,
       isChooseTeamB: false,
       isNotChooseTeamA:true,
       isNotChooseTeamB:true,
-      isNotStartGameButton:true
+      isNotStartGameButton:true,
+      isGameStart:false,
+      isExpanded:'false'
   }
 
   async _loadFontsAsync() {
@@ -102,10 +156,23 @@ class EscolherTimes extends Component {
 
   componentDidMount() {
     this._loadFontsAsync();
+    axios.get('http://10.2.200.71:80/api/get_teams_list')
+      .then(response => {
+        this.setState({
+      
+      TEAMS: response.data,
+        })
+
+      })
+      .catch(console.log)
+
+
   }
   
   escolherTimeA = () => {
-    this.setState({isChooseTeamA:true})
+    this.setState({isChooseTeamA:true});
+      
+      
   }
 
   escolherTimeB = () => {
@@ -120,24 +187,49 @@ class EscolherTimes extends Component {
     this.setState({isChooseTeamB:false,isNotStartGameButton:false,TEAM_B:time })
   }
 
-  obterLista = () => {
-    axios.get('https://apivxsiv.vortx.com.br/api/devxdadostabela')
+  
+
+  obterListaTimes = () => {
+    axios.get('http://10.2.200.71:80/api/get_teams?team='+this.state.TEAM_A)
       .then(response => {
         this.setState({
-          data: response.data,
-        })
+      
+      TEAM_A_PLAYERS: response.data,
+        });console.log(this.state.TEAM_A_PLAYERS)
 
       })
       .catch(console.log)
   }
 
-  
+  comecarJogo = () => {
+    this.setState({isGameStart:true});console.log(this.state);
+    
+    axios.post('http://10.2.200.71:80/api/get_team_a',this.state)
+    .then(response => {
+      this.setState({
+    
+    TEAM_A_PLAYERS: response.data,
+      });console.log(this.state.TEAM_A_PLAYERS)
+
+    })
+    .catch(console.log);
+    
+    axios.post('http://10.2.200.71:80/api/get_team_b',this.state)
+    .then(response => {
+      this.setState({
+    
+    TEAM_B_PLAYERS: response.data,
+      });console.log(this.state.TEAM_B_PLAYERS)
+
+    })
+    .catch(console.log)
+  }
 
   cadastrar = () => {
     axios.post('https://apivxsiv.vortx.com.br/api/devxcadastrar', this.state)
       .then(response => {
 
-        toast.success("Operação cadastrada com sucesso! 🔥🚀", {
+        toast.success("Operação cadastrada com Dsucesso! 🔥🚀", {
           position: "bottom-center",
           autoClose: 4000,
           hideProgressBar: false,
@@ -155,28 +247,66 @@ class EscolherTimes extends Component {
       })
   }
 
-  tela=()=>{
-
-
-    
-  }
+  
   
   render() {
 
     if (this.state.fontsLoaded) {
+
+      if (this.state.isGameStart){
+
+        return (<View style={styles.game_view}>
+    
+         
+
+          
+  {this.state.TEAM_A_PLAYERS.map((l, i) => (
+    
+    <Button key={i}
+    disabled={this.state.isNotChooseTeamB}
+     buttonStyle={styles.game_view_a}
+     title={l.number}
+      />
+
+
+  ))}
+
+{this.state.TEAM_B_PLAYERS.map((l, i) => (
+   
+    <Button key={i}
+    disabled={this.state.isNotChooseTeamB}
+     buttonStyle={styles.game_view_b}
+     title={l.number}
+      />
+
+
+  ))}
+
+
+
+          </View>
+          
+          
+          
+          
+          
+          )
+      }
+
+
     
 
     if (this.state.isChooseTeamA){
 
       return (<View >
         {
-          teams.map((l, i) => (
+          this.state.TEAMS.map((l, i) => (
             
-            <ListItem button key={i} bottomDivider onPress={() => this.TimeAEscolhido(l.name)}>
+            <ListItem button key={i} bottomDivider onPress={() => this.TimeAEscolhido(l)}>
               <Avatar source={{uri: l.avatar_url}} />
               <ListItem.Content>
-                <ListItem.Title>{l.name}</ListItem.Title>
-                <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+                <ListItem.Title>{l}</ListItem.Title>
+                
               </ListItem.Content>
             </ListItem>
           ))
@@ -188,13 +318,13 @@ class EscolherTimes extends Component {
 
       return (<View >
         {
-          teams.map((l, i) => (
+          this.state.TEAMS.map((l, i) => (
             
-            <ListItem button key={i} bottomDivider onPress={() => this.TimeBEscolhido(l.name)}>
+            <ListItem button key={i} bottomDivider onPress={() => this.TimeBEscolhido(l)}>
               <Avatar source={{uri: l.avatar_url}} />
               <ListItem.Content>
-                <ListItem.Title>{l.name}</ListItem.Title>
-                <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+                <ListItem.Title>{l}</ListItem.Title>
+              
               </ListItem.Content>
             </ListItem>
           ))
@@ -241,6 +371,7 @@ class EscolherTimes extends Component {
      disabled={this.state.isNotStartGameButton}
       buttonStyle={{width:250,borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:"black"}}
       title='INICIAR JOGO'
+      onPress={this.comecarJogo}
        />
   
 </Card>
