@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 70,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -266,7 +266,28 @@ class EscolherTimes extends Component {
       
       
   }
+  fecharModal_3pt = (time_escolhido) => {
 
+    if (time_escolhido=='A'){
+    this.setState({isVisibleModal:false});
+
+    
+    this.setState({placar_a:this.state.placar_a+3});}
+    else
+
+    {
+
+      this.setState({isVisibleModal:false});
+
+    
+    this.setState({placar_b:this.state.placar_b+3})
+
+
+    }
+
+      
+      
+  }
   
   escolherTimeB = () => {
     this.setState({isChooseTeamB:true})
@@ -363,12 +384,18 @@ class EscolherTimes extends Component {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{this.state.nome_modal}</Text>
             <Button
-              style={[styles.button, styles.buttonClose]}
+              
               onPress={()=>this.fecharModal(this.state.time_escolhido)}
               title='2 PT'
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              
+              
             </Button>
+            <Button
+              buttonStyle={{marginTop:'10%'}}
+              onPress={()=>this.fecharModal_3pt(this.state.time_escolhido)}
+              title='3 PT'
+            ></Button>
           </View>
         </View>
       </Modal>
